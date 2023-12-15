@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="MainActivity"
+    android:padding="20dp"
+    android:background="@drawable/background">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="288dp"
+        android:layout_height="170dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="5dp"
+        android:src="@drawable/network"
+        />
+
+    <TextView
+        android:layout_width="349dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:text="CREATE AN ACCOUNT"
+        android:textColor="#FFFFFF"
+        android:textSize="22sp"
+        android:textStyle="bold"
+
+        />
+
+    <EditText
+        android:id="@+id/name"
+        android:layout_width="371dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:ems="10"
+        android:backgroundTint="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        android:textColor="@color/white"
+        android:hint="Enter You Name And Surname"
+
+        />
+    <EditText
+        android:id="@+id/email"
+        android:layout_width="370dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:ems="10"
+        android:hint="Enter E-mail"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:inputType="textEmailAddress"
+        android:textColor="@color/white"
+        android:textColorHint="#FFFFFF"
+        android:backgroundTint="#FFFFFF"
+      />
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="371dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:ems="10"
+        android:backgroundTint="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        android:textColor="@color/white"
+        android:hint="Enter Password"
+        android:inputType="textPassword"
+        app:layout_constraintStart_toStartOf="@+id/email"
+        app:layout_constraintTop_toBottomOf="@+id/email" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="193dp"
+        android:layout_height="58dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:backgroundTint="#FFFFFF"
+        android:gravity="center"
+        android:onClick="signUpClicked"
+        android:text="Sign Up"
+        android:textColor="#044278"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/password"
+        app:layout_constraintStart_toStartOf="@+id/password"
+        app:layout_constraintTop_toBottomOf="@+id/password" />
+</LinearLayout>
