@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "486649083047",
+    "firebase_url": "https://ccnaquizapp-default-rtdb.firebaseio.com",
     "project_id": "ccnaquizapp",
     "storage_bucket": "ccnaquizapp.appspot.com"
   },
@@ -12,7 +13,20 @@
           "package_name": "com.haliscerit.myapplication"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "486649083047-4mkrqfi6oa31tubk4lsvsom9kok05lif.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.haliscerit.myapplication",
+            "certificate_hash": "13ecb0ae8292e21adc46d64f3d301fdfa14bc4c3"
+          }
+        },
+        {
+          "client_id": "486649083047-n3j8saq8pufdn94d2b1sp1q52qfv0msa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyB-bB00FPOzLxg7D_Y6uBHRY8YWdK4PaSg"
@@ -20,7 +34,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "486649083047-n3j8saq8pufdn94d2b1sp1q52qfv0msa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

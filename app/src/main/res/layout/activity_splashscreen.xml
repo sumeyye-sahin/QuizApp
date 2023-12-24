@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ABB0C1"
+    android:background="#ffffff"
     tools:context=".Splashscreen">
 
     <TextView
@@ -13,7 +13,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="60dp"
         android:text="CCNA 200-301"
-        android:textColor="#052E51"
+        android:textColor="#000000"
+        android:fontFamily="@font/font1"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"

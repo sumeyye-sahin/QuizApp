@@ -51,6 +51,7 @@ class ProfileActivity : AppCompatActivity() {
     override fun onResume() { // anlamı: uygulama yeniden başlatıldığında çalışır
         super.onResume()  // onResume aktivite yeniden başlatıldığında çalışır
 
+
         Firebase.database.reference.child("Users").child(auth.currentUser!!.uid).get().addOnSuccessListener {
             binding.apply {
                 progressBar.visibility = View.GONE //görünürlük: GONE, görünmez

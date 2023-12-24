@@ -1,8 +1,11 @@
 package com.haliscerit.myapplication
 
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
+import android.widget.Toast
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.haliscerit.myapplication.databinding.ActivityQuizBinding
@@ -11,6 +14,7 @@ import com.haliscerit.myapplication.model.Question
 class QuizActivity : AppCompatActivity() {
     private lateinit var binding: ActivityQuizBinding
     private lateinit var questionList: ArrayList<Question>
+    var  currentQuestion = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding= ActivityQuizBinding.inflate(layoutInflater)
@@ -40,11 +44,11 @@ class QuizActivity : AppCompatActivity() {
                 }
 
                if(questionList.size >0){
-                   binding.question.text= questionList.get(0).question
-                   binding.option1.text= questionList.get(0).option1
-                   binding.option2.text= questionList.get(0).option2
-                   binding.option3.text= questionList.get(0).option3
-                   binding.option4.text= questionList.get(0).option4}
+                   binding.question.text= questionList.get(currentQuestion).question
+                   binding.option1.text= questionList.get(currentQuestion).option1
+                   binding.option2.text= questionList.get(currentQuestion).option2
+                   binding.option3.text= questionList.get(currentQuestion).option3
+                   binding.option4.text= questionList.get(currentQuestion).option4}
             }.addOnSuccessListener {
                 binding.progressBar2.visibility= android.view.View.GONE
                 binding.questionType.visibility= android.view.View.VISIBLE
@@ -58,5 +62,75 @@ class QuizActivity : AppCompatActivity() {
                 binding.textView7.visibility= android.view.View.VISIBLE
             }
 
+        binding.option1.setOnClickListener {
+            nextQuestionAndScoreUpdate(binding.option1.text.toString())
+        }
+        binding.option2.setOnClickListener {
+            nextQuestionAndScoreUpdate(binding.option2.text.toString())
+        }
+         binding.option3.setOnClickListener {
+            nextQuestionAndScoreUpdate(binding.option3.text.toString())
+        }
+        binding.option4.setOnClickListener {
+            nextQuestionAndScoreUpdate(binding.option4.text.toString())
+        }
+
     }
+
+    private fun nextQuestionAndScoreUpdate(selectedOption:String) {
+        val correctAnswer = questionList.get(currentQuestion).ans
+
+        if (selectedOption == correctAnswer) {
+
+            // The answer is correct, change the color to green
+            setOptionButtonColor(binding.option1, correctAnswer,selectedOption)
+            setOptionButtonColor(binding.option2, correctAnswer,selectedOption)
+            setOptionButtonColor(binding.option3, correctAnswer,selectedOption)
+            setOptionButtonColor(binding.option4, correctAnswer,selectedOption)
+        } else {
+            // The answer is incorrect, change the color to red
+            if (correctAnswer != null) {
+                setOptionButtonColor(binding.option1, correctAnswer, selectedOption)
+
+            setOptionButtonColor(binding.option2, correctAnswer, selectedOption)
+            setOptionButtonColor(binding.option3, correctAnswer, selectedOption)
+            setOptionButtonColor(binding.option4, correctAnswer, selectedOption)}
+        }
+        setButtonClickable(false)
+       /* currentQuestion++
+        if (currentQuestion>=questionList.size){
+
+            Toast.makeText(this,"You have reached to end", Toast.LENGTH_SHORT).show()
+        }
+        else{
+
+        binding.question.text= questionList.get(currentQuestion).question
+        binding.option1.text= questionList.get(currentQuestion).option1
+        binding.option2.text= questionList.get(currentQuestion).option2
+        binding.option3.text= questionList.get(currentQuestion).option3
+        binding.option4.text= questionList.get(currentQuestion).option4
+
+        }
+        setButtonClickable(true)*/
+    }
+    private fun setOptionButtonColor(button: Button, correctAnswer: String, selectedOption: String) {
+        if (button.text == correctAnswer) {
+            // Change the color of the correct answer button to green
+            button.setBackgroundColor(Color.GREEN)
+            // Change the text color to white
+            button.setTextColor(Color.WHITE)
+        } else if (button.text == selectedOption) {
+            // Change the color of the incorrect answer button to red
+            button.setBackgroundColor(Color.RED)
+            // Change the text color to white
+            button.setTextColor(Color.WHITE)
+        }
+    }
+    private fun setButtonClickable(clickable: Boolean) {
+        binding.option1.isClickable = clickable
+        binding.option2.isClickable = clickable
+        binding.option3.isClickable = clickable
+        binding.option4.isClickable = clickable
+    }
+
 }

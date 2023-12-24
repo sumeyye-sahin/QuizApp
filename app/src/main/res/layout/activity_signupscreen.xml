@@ -8,74 +8,70 @@
     android:orientation="vertical"
     tools:context="MainActivity"
     android:padding="20dp"
-    android:background="@drawable/background">
+    android:background="@color/white">
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="288dp"
+        android:layout_width="wrap_content"
         android:layout_height="170dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="5dp"
-        android:src="@drawable/network"
-        />
+        android:layout_marginTop="1dp"
+        android:src="@drawable/complex_network" />
 
     <TextView
         android:layout_width="349dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginTop="5dp"
         android:gravity="center"
+        android:textAppearance="@android:style/TextAppearance.Material.Title"
         android:text="CREATE AN ACCOUNT"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp"
+        android:textColor="#000000"
+        android:textSize="20sp"
         android:textStyle="bold"
 
         />
 
     <EditText
         android:id="@+id/name"
-        android:layout_width="371dp"
-        android:layout_height="52dp"
+        android:layout_width="289dp"
+        android:layout_height="48dp"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
         android:layout_gravity="center"
-        android:gravity="center"
+        android:paddingLeft="10dp"
         android:ems="10"
-        android:backgroundTint="#FFFFFF"
-        android:textColorHint="#FFFFFF"
-        android:textColor="@color/white"
-        android:hint="Enter You Name And Surname"
+        android:background="@drawable/secondbackground"
+        android:textColorHint="#000000"
+        android:textColor="@color/black"
+        android:hint="Enter Username"
 
         />
     <EditText
         android:id="@+id/email"
-        android:layout_width="370dp"
-        android:layout_height="52dp"
+        android:layout_width="289dp"
+        android:layout_height="48dp"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
         android:ems="10"
         android:hint="Enter E-mail"
         android:layout_gravity="center"
-        android:gravity="center"
+        android:paddingLeft="10dp"
         android:inputType="textEmailAddress"
-        android:textColor="@color/white"
-        android:textColorHint="#FFFFFF"
-        android:backgroundTint="#FFFFFF"
+        android:textColor="@color/black"
+        android:textColorHint="#000000"
+        android:background="@drawable/secondbackground"
       />
 
     <EditText
         android:id="@+id/password"
-        android:layout_width="371dp"
-        android:layout_height="52dp"
+        android:layout_width="289dp"
+        android:layout_height="48dp"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
         android:layout_gravity="center"
-        android:gravity="center"
         android:ems="10"
-        android:backgroundTint="#FFFFFF"
-        android:textColorHint="#FFFFFF"
-        android:textColor="@color/white"
+        android:background="@drawable/secondbackground"
+        android:paddingLeft="10dp"
+        android:textColorHint="#000000"
+        android:textColor="@color/black"
         android:hint="Enter Password"
         android:inputType="textPassword"
         app:layout_constraintStart_toStartOf="@+id/email"
@@ -83,17 +79,91 @@
 
     <Button
         android:id="@+id/button2"
-        android:layout_width="193dp"
-        android:layout_height="58dp"
+        android:layout_width="289dp"
+        android:layout_height="52dp"
         android:layout_gravity="center"
-        android:layout_marginTop="15dp"
-        android:backgroundTint="#FFFFFF"
-        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/secondbackground"
+        android:backgroundTint="#0097A7"
         android:onClick="signUpClicked"
-        android:text="Sign Up"
-        android:textColor="#044278"
+        android:text="Sıgn In"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#0097A7"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/password"
         app:layout_constraintStart_toStartOf="@+id/password"
         app:layout_constraintTop_toBottomOf="@+id/password" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="OR"
+        android:textStyle="bold"
+        android:textColor="#0097A7"
+        android:textSize="18sp"
+        android:layout_marginTop="2dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+
+        />
+
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="289dp"
+        android:layout_height="52dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="2dp"
+        android:theme="@style/Theme.QuizApp.Signupscreen"
+        android:background="@drawable/secondbackground"
+        android:backgroundTint="@color/black"
+        android:drawableLeft="@drawable/logo_google2"
+        android:paddingRight="20dp"
+        android:shadowColor="#000000"
+        android:text="SIGN IN WITH GOOGLE"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/password"
+        app:layout_constraintTop_toBottomOf="@+id/password" />
+
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:paddingVertical="10dp"
+        android:paddingHorizontal="16dp">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Already have an account? "
+            android:textColor="#000000"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Login here"
+            android:textColor="#0097A7"
+            android:textStyle="bold"
+            android:layout_marginStart="4dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:textSize="18sp"
+            android:onClick="loginClick"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </LinearLayout>
+
+
 </LinearLayout>

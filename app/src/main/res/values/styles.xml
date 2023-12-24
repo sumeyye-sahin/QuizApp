@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.QuizApp.Signupscreen" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorButtonNormal">#000000</item> <!-- İstediğiniz özel renk -->
+    </style>
+
+</resources>
