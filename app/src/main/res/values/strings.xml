@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">QuizApp</string>
+    <string name="default_web_client_id">486649083047-n3j8saq8pufdn94d2b1sp1q52qfv0msa.apps.googleusercontent.com</string>
 
 </resources>

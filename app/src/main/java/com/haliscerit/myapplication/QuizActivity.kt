@@ -6,6 +6,11 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.Toast
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.haliscerit.myapplication.databinding.ActivityQuizBinding
@@ -75,9 +80,91 @@ class QuizActivity : AppCompatActivity() {
             nextQuestionAndScoreUpdate(binding.option4.text.toString())
         }
 
+
+
+
     }
 
-    private fun nextQuestionAndScoreUpdate(selectedOption:String) {
+    // doğru ve yanlış cevap kısımlarını veritabanına kayıt etmeliyiz
+// doğru ve yanlış cevapları veritabanından çekip ekrana yazdırmalıyız
+    private fun nextQuestionAndScoreUpdate(selectedOption: String) {
+        val correctAnswer = questionList[currentQuestion].ans
+        val isCorrect = selectedOption == correctAnswer
+
+
+        // Doğru ve yanlış sayıları güncelle
+        if (isCorrect) {
+            // Doğru cevap
+            updateScore("correctCount")
+        } else {
+            // Yanlış cevap
+            updateScore("wrongCount")
+        }
+
+        // Renkleri ayarla
+        if (correctAnswer != null) {
+            setOptionButtonColor(binding.option1, correctAnswer, selectedOption)
+        }
+        if (correctAnswer != null) {
+            setOptionButtonColor(binding.option2, correctAnswer, selectedOption)
+        }
+        if (correctAnswer != null) {
+            setOptionButtonColor(binding.option3, correctAnswer, selectedOption)
+        }
+        if (correctAnswer != null) {
+            setOptionButtonColor(binding.option4, correctAnswer, selectedOption)
+        }
+
+        // Butonları tıklanabilir yap
+        setButtonClickable(false)
+
+        binding.next.setOnClickListener {
+            // Sonraki soruya geç
+            currentQuestion++
+            resetButtonColors()
+            setButtonClickable(true)
+
+            if (currentQuestion >= questionList.size) {
+                setButtonClickable(false)
+                Toast.makeText(this, "You have reached the end", Toast.LENGTH_SHORT).show()
+            } else {
+                // Soruları güncelle
+                updateQuestionUI()
+            }
+        }
+    }
+
+    private fun updateScore(scoreType: String) {
+        val user = Firebase.auth.currentUser
+        val userId = user?.uid
+
+        if (userId != null) {
+            val userRef = Firebase.database.reference.child("Users").child(userId)
+            val quizResultsRef = userRef.child("QuizResults")
+
+            quizResultsRef.child(scoreType).addListenerForSingleValueEvent(object :
+                ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    var currentCount = snapshot.value as? Long ?: 0
+                    currentCount++
+                    quizResultsRef.child(scoreType).setValue(currentCount)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e("QuizActivity", "Failed to update score: ${error.message}")
+                }
+            })
+        }
+    }
+
+    private fun updateQuestionUI() {
+        binding.question.text = questionList[currentQuestion].question
+        binding.option1.text = questionList[currentQuestion].option1
+        binding.option2.text = questionList[currentQuestion].option2
+        binding.option3.text = questionList[currentQuestion].option3
+        binding.option4.text = questionList[currentQuestion].option4
+    }
+ /*   private fun nextQuestionAndScoreUpdate(selectedOption:String) {
         val correctAnswer = questionList.get(currentQuestion).ans
 
         if (selectedOption == correctAnswer) {
@@ -91,13 +178,34 @@ class QuizActivity : AppCompatActivity() {
             // The answer is incorrect, change the color to red
             if (correctAnswer != null) {
                 setOptionButtonColor(binding.option1, correctAnswer, selectedOption)
-
-            setOptionButtonColor(binding.option2, correctAnswer, selectedOption)
-            setOptionButtonColor(binding.option3, correctAnswer, selectedOption)
-            setOptionButtonColor(binding.option4, correctAnswer, selectedOption)}
+                setOptionButtonColor(binding.option2, correctAnswer, selectedOption)
+                setOptionButtonColor(binding.option3, correctAnswer, selectedOption)
+                setOptionButtonColor(binding.option4, correctAnswer, selectedOption)}
         }
         setButtonClickable(false)
-       /* currentQuestion++
+
+        binding.next.setOnClickListener {
+            currentQuestion++
+            resetButtonColors()
+            setButtonClickable(true)
+            if (currentQuestion>=questionList.size){
+                setButtonClickable(false)
+                Toast.makeText(this,"You have reached to end", Toast.LENGTH_SHORT).show()
+
+
+            }
+            else{
+
+                binding.question.text= questionList.get(currentQuestion).question
+                binding.option1.text= questionList.get(currentQuestion).option1
+                binding.option2.text= questionList.get(currentQuestion).option2
+                binding.option3.text= questionList.get(currentQuestion).option3
+                binding.option4.text= questionList.get(currentQuestion).option4
+
+            }
+
+        }
+       *//* currentQuestion++
         if (currentQuestion>=questionList.size){
 
             Toast.makeText(this,"You have reached to end", Toast.LENGTH_SHORT).show()
@@ -111,8 +219,8 @@ class QuizActivity : AppCompatActivity() {
         binding.option4.text= questionList.get(currentQuestion).option4
 
         }
-        setButtonClickable(true)*/
-    }
+        setButtonClickable(true)*//*
+    }*/
     private fun setOptionButtonColor(button: Button, correctAnswer: String, selectedOption: String) {
         if (button.text == correctAnswer) {
             // Change the color of the correct answer button to green
@@ -125,6 +233,16 @@ class QuizActivity : AppCompatActivity() {
             // Change the text color to white
             button.setTextColor(Color.WHITE)
         }
+    }
+    private fun resetButtonColors() {
+        setButtonColor(binding.option1, Color.TRANSPARENT, Color.BLACK)
+        setButtonColor(binding.option2, Color.TRANSPARENT, Color.BLACK)
+        setButtonColor(binding.option3, Color.TRANSPARENT, Color.BLACK)
+        setButtonColor(binding.option4, Color.TRANSPARENT, Color.BLACK)
+    }
+    private fun setButtonColor(button: Button, backgroundColor: Int, textColor: Int) {
+        button.setBackgroundColor(backgroundColor)
+        button.setTextColor(textColor)
     }
     private fun setButtonClickable(clickable: Boolean) {
         binding.option1.isClickable = clickable

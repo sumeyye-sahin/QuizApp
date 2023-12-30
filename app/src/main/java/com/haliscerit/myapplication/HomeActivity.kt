@@ -60,7 +60,7 @@ class HomeActivity : AppCompatActivity() {
             categoryrecyclerView.adapter = adapter
             categoryrecyclerView.setHasFixedSize(true)
             categoryrecyclerView.layoutManager =
-                StaggeredGridLayoutManager(2, RecyclerView.VERTICAL) //StringgeredGridLayoutManager: Sütun sayısı 2, dikey yönde düzenle
+                StaggeredGridLayoutManager(1, RecyclerView.VERTICAL) //StringgeredGridLayoutManager: Sütun sayısı 2, dikey yönde düzenle
         }
     }
 }
