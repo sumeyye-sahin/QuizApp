@@ -1,5 +1,7 @@
 package com.haliscerit.myapplication
 
+import android.app.AlertDialog
+import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -11,14 +13,17 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.haliscerit.myapplication.databinding.ActivityQuizBinding
 import com.haliscerit.myapplication.model.Question
+import kotlinx.coroutines.tasks.await
 
 class QuizActivity : AppCompatActivity() {
     private lateinit var binding: ActivityQuizBinding
     private lateinit var questionList: ArrayList<Question>
+    private var currentAlertDialog: AlertDialog? = null
     var  currentQuestion = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,15 +32,10 @@ class QuizActivity : AppCompatActivity() {
         setContentView(view)
 
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar!!.title=""
 
         questionList= ArrayList<Question>()
-
-        val image= intent.getIntExtra("imageView3",0)
-        binding.imageView3.setImageResource(image)
-
         val catText= intent.getStringExtra("questionType")
-        binding.questionType.text= catText
+        supportActionBar!!.title=catText
 
         Firebase.firestore.collection("Questions")
             .document(catText.toString())
@@ -49,22 +49,26 @@ class QuizActivity : AppCompatActivity() {
                 }
 
                if(questionList.size >0){
-                   binding.question.text= questionList.get(currentQuestion).question
+                   binding.question.text = questionList.get(currentQuestion).question.toString().replace("/n", "\n")
                    binding.option1.text= questionList.get(currentQuestion).option1
                    binding.option2.text= questionList.get(currentQuestion).option2
                    binding.option3.text= questionList.get(currentQuestion).option3
-                   binding.option4.text= questionList.get(currentQuestion).option4}
+                   binding.option4.text= questionList.get(currentQuestion).option4
+                   binding.sorusirasi.text = "Question - ${currentQuestion +1}"
+                   binding.expText.text=questionList.get(currentQuestion).exp
+               }
             }.addOnSuccessListener {
                 binding.progressBar2.visibility= android.view.View.GONE
-                binding.questionType.visibility= android.view.View.VISIBLE
                 binding.question.visibility= android.view.View.VISIBLE
                 binding.option1.visibility= android.view.View.VISIBLE
                 binding.option2.visibility= android.view.View.VISIBLE
                 binding.option3.visibility= android.view.View.VISIBLE
                 binding.option4.visibility= android.view.View.VISIBLE
                 binding.next.visibility= android.view.View.VISIBLE
-                binding.imageView3.visibility= android.view.View.VISIBLE
-                binding.textView7.visibility= android.view.View.VISIBLE
+                binding.back.visibility= android.view.View.VISIBLE
+                binding.sorusirasi.visibility= android.view.View.VISIBLE
+                binding.line.visibility=android.view.View.VISIBLE
+                binding.expLayout.visibility=android.view.View.GONE
             }
 
         binding.option1.setOnClickListener {
@@ -80,10 +84,14 @@ class QuizActivity : AppCompatActivity() {
             nextQuestionAndScoreUpdate(binding.option4.text.toString())
         }
 
+        binding.back.setOnClickListener {
+            goBackToPreviousQuestion()
+        }
 
 
 
     }
+
 
     // doğru ve yanlış cevap kısımlarını veritabanına kayıt etmeliyiz
 // doğru ve yanlış cevapları veritabanından çekip ekrana yazdırmalıyız
@@ -91,29 +99,22 @@ class QuizActivity : AppCompatActivity() {
         val correctAnswer = questionList[currentQuestion].ans
         val isCorrect = selectedOption == correctAnswer
 
-
         // Doğru ve yanlış sayıları güncelle
-        if (isCorrect) {
-            // Doğru cevap
+        if (isCorrect) {            // Doğru cevap
             updateScore("correctCount")
-        } else {
-            // Yanlış cevap
+        } else {            // Yanlış cevap
             updateScore("wrongCount")
+            binding.expLayout.visibility=android.view.View.VISIBLE
         }
-
         // Renkleri ayarla
         if (correctAnswer != null) {
-            setOptionButtonColor(binding.option1, correctAnswer, selectedOption)
-        }
+            setOptionButtonColor(binding.option1, correctAnswer, selectedOption)        }
         if (correctAnswer != null) {
-            setOptionButtonColor(binding.option2, correctAnswer, selectedOption)
-        }
+            setOptionButtonColor(binding.option2, correctAnswer, selectedOption)        }
         if (correctAnswer != null) {
-            setOptionButtonColor(binding.option3, correctAnswer, selectedOption)
-        }
+            setOptionButtonColor(binding.option3, correctAnswer, selectedOption)        }
         if (correctAnswer != null) {
-            setOptionButtonColor(binding.option4, correctAnswer, selectedOption)
-        }
+            setOptionButtonColor(binding.option4, correctAnswer, selectedOption)        }
 
         // Butonları tıklanabilir yap
         setButtonClickable(false)
@@ -123,10 +124,13 @@ class QuizActivity : AppCompatActivity() {
             currentQuestion++
             resetButtonColors()
             setButtonClickable(true)
+            binding.expLayout.visibility=android.view.View.GONE
 
             if (currentQuestion >= questionList.size) {
                 setButtonClickable(false)
                 Toast.makeText(this, "You have reached the end", Toast.LENGTH_SHORT).show()
+                konuSonuDegerlendirme()
+                // toplam yapılan yanlış sayısı ve doğru sayısını buraya yazdıracağım
             } else {
                 // Soruları güncelle
                 updateQuestionUI()
@@ -137,17 +141,21 @@ class QuizActivity : AppCompatActivity() {
     private fun updateScore(scoreType: String) {
         val user = Firebase.auth.currentUser
         val userId = user?.uid
+        var questionid = questionList[currentQuestion].id.toString()
+        var category = questionList[currentQuestion].category.toString()
 
         if (userId != null) {
             val userRef = Firebase.database.reference.child("Users").child(userId)
-            val quizResultsRef = userRef.child("QuizResults")
+            val quizResultsRef = userRef.child("QuizResults").child(category).child(questionid)
+
 
             quizResultsRef.child(scoreType).addListenerForSingleValueEvent(object :
                 ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     var currentCount = snapshot.value as? Long ?: 0
-                    currentCount++
-                    quizResultsRef.child(scoreType).setValue(currentCount)
+                    val currentIsCorrect = scoreType == "correctCount"
+                    quizResultsRef.child("currentiscorrect").setValue(currentIsCorrect)
+                    quizResultsRef.child(scoreType).setValue(currentCount+1)
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -157,74 +165,23 @@ class QuizActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateQuestionUI() {
-        binding.question.text = questionList[currentQuestion].question
-        binding.option1.text = questionList[currentQuestion].option1
+    private  fun updateQuestionUI() {
+        // explanation a da replace eklenecek
+        binding.question.text = questionList.get(currentQuestion).question.toString().replace("/n", "\n")
+        binding.option1.text= questionList[currentQuestion].option1
         binding.option2.text = questionList[currentQuestion].option2
         binding.option3.text = questionList[currentQuestion].option3
         binding.option4.text = questionList[currentQuestion].option4
+        binding.expText.text= questionList[currentQuestion].exp
+        binding.sorusirasi.text = "Question - ${currentQuestion + 1}"
+
+
     }
- /*   private fun nextQuestionAndScoreUpdate(selectedOption:String) {
-        val correctAnswer = questionList.get(currentQuestion).ans
 
-        if (selectedOption == correctAnswer) {
-
-            // The answer is correct, change the color to green
-            setOptionButtonColor(binding.option1, correctAnswer,selectedOption)
-            setOptionButtonColor(binding.option2, correctAnswer,selectedOption)
-            setOptionButtonColor(binding.option3, correctAnswer,selectedOption)
-            setOptionButtonColor(binding.option4, correctAnswer,selectedOption)
-        } else {
-            // The answer is incorrect, change the color to red
-            if (correctAnswer != null) {
-                setOptionButtonColor(binding.option1, correctAnswer, selectedOption)
-                setOptionButtonColor(binding.option2, correctAnswer, selectedOption)
-                setOptionButtonColor(binding.option3, correctAnswer, selectedOption)
-                setOptionButtonColor(binding.option4, correctAnswer, selectedOption)}
-        }
-        setButtonClickable(false)
-
-        binding.next.setOnClickListener {
-            currentQuestion++
-            resetButtonColors()
-            setButtonClickable(true)
-            if (currentQuestion>=questionList.size){
-                setButtonClickable(false)
-                Toast.makeText(this,"You have reached to end", Toast.LENGTH_SHORT).show()
-
-
-            }
-            else{
-
-                binding.question.text= questionList.get(currentQuestion).question
-                binding.option1.text= questionList.get(currentQuestion).option1
-                binding.option2.text= questionList.get(currentQuestion).option2
-                binding.option3.text= questionList.get(currentQuestion).option3
-                binding.option4.text= questionList.get(currentQuestion).option4
-
-            }
-
-        }
-       *//* currentQuestion++
-        if (currentQuestion>=questionList.size){
-
-            Toast.makeText(this,"You have reached to end", Toast.LENGTH_SHORT).show()
-        }
-        else{
-
-        binding.question.text= questionList.get(currentQuestion).question
-        binding.option1.text= questionList.get(currentQuestion).option1
-        binding.option2.text= questionList.get(currentQuestion).option2
-        binding.option3.text= questionList.get(currentQuestion).option3
-        binding.option4.text= questionList.get(currentQuestion).option4
-
-        }
-        setButtonClickable(true)*//*
-    }*/
     private fun setOptionButtonColor(button: Button, correctAnswer: String, selectedOption: String) {
         if (button.text == correctAnswer) {
             // Change the color of the correct answer button to green
-            button.setBackgroundColor(Color.GREEN)
+            button.setBackgroundColor(Color.parseColor("#0097A7"))
             // Change the text color to white
             button.setTextColor(Color.WHITE)
         } else if (button.text == selectedOption) {
@@ -250,5 +207,77 @@ class QuizActivity : AppCompatActivity() {
         binding.option3.isClickable = clickable
         binding.option4.isClickable = clickable
     }
+    private fun goBackToPreviousQuestion() {
+        if (currentQuestion > 0) {
+            currentQuestion--
+            updateQuestionUI()
+            resetButtonColors()
+            setButtonClickable(true)
+            binding.expLayout.visibility=android.view.View.GONE
+        } else {
+            // Eğer bir önceki soru yoksa, bu aktiviteyi sonlandırabilirsiniz.
+            finish()
+        }
+
+    }
+
+    private fun konuSonuDegerlendirme() {
+        val user = Firebase.auth.currentUser
+        val userId = user?.uid
+
+        if (userId != null) {
+            val userRef = Firebase.database.reference.child("Users").child(userId)
+                .child("QuizResults")
+            // Mevcut konu adını alınır
+            val currentCategory = intent.getStringExtra("questionType")
+            // Mevcut konu adına ait verileri çekilir
+            val currentCategoryRef = currentCategory?.let { userRef.child(it) }
+
+            if (currentCategoryRef != null) {
+                currentCategoryRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        var correctCount = 0L
+                        var wrongCount = 0L
+
+                        for (questionSnapshot in snapshot.children) {
+                            val currentIsCorrect = questionSnapshot.child("currentiscorrect").getValue(Boolean::class.java)
+                                ?: false
+
+                            // Sorunun durumuna göre doğru veya yanlış sayısını arttır
+                            if (currentIsCorrect) {
+                                correctCount++
+                            } else {
+                                wrongCount++
+                            }
+
+                            // Ekstra Log ifadeleri ekleyin
+                            println("Category: $currentCategory, QuestionID: ${questionSnapshot.key}, IsCorrect: $currentIsCorrect")
+                        }
+                        // Her bir kategori için doğru ve yanlış sayılarını yazdırın
+                        println("Category: $currentCategory, Correct Count: $correctCount, Wrong Count: $wrongCount")
+
+                        // Sonuçları gösteren bir alert dialog oluşturun ve gösterin
+                        val builder = AlertDialog.Builder(this@QuizActivity)
+                        builder.setTitle("Quiz Result - $currentCategory")
+                        builder.setMessage("Correct Count: $correctCount\nWrong Count: $wrongCount")
+
+                        builder.setPositiveButton("OK") { dialog, which ->
+                            dialog.dismiss()
+                        }
+
+                        // AlertDialog'ı saklayın
+                        currentAlertDialog = builder.create()
+                        currentAlertDialog?.show()
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        println("Failed to retrieve quiz results: ${error.message}")
+                    }
+                })
+            }
+        }
+    }
+
+
 
 }

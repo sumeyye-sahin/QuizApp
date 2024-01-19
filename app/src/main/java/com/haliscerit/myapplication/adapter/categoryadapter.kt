@@ -30,7 +30,7 @@ class categoryadapter(var categoryList: ArrayList<Categorymodelclass>) : Recycle
             holder.itemBinding.touchableArea.context,
             QuizActivity::class.java
             )
-            intent.putExtra("imageView3",dataList.image)
+            //intent.putExtra("imageView3",dataList.image)
             intent.putExtra("questionType",dataList.text)
             //start
             holder.itemBinding.touchableArea.context.startActivity(intent)

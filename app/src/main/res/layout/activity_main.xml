@@ -108,14 +108,16 @@
 
     <Button
         android:id="@+id/button3"
+
         android:layout_width="289dp"
         android:layout_height="52dp"
+        android:onClick="buttongoogle"
+        
         android:layout_gravity="center"
         android:layout_marginTop="5dp"
         android:background="@drawable/secondbackground"
         android:backgroundTint="@color/black"
         android:drawableLeft="@drawable/logo_google2"
-        android:onClick="googleClick"
         android:paddingRight="20dp"
         android:shadowColor="#000000"
         android:text="LOGIN WITH GOOGLE"

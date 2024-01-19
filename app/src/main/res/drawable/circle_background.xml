@@ -1,0 +1,7 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <solid android:color="#C84217" /> <!-- Arka plan rengi (transparan beyaz) -->
+    <corners android:radius="270dp" /> <!-- Yuvarlak köşe yarıçapı -->
+
+</shape>
