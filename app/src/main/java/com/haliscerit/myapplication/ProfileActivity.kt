@@ -1,6 +1,5 @@
 package com.haliscerit.myapplication
 
-import android.app.AlertDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -66,6 +65,7 @@ class ProfileActivity : AppCompatActivity() {
             binding.emailtext.text="Email:"
             binding.profileImage.visibility = View.VISIBLE
             binding.process.visibility=View.VISIBLE
+            binding.processlayout.visibility=View.VISIBLE
             binding.profileName.text = it.child("name").value.toString()
             binding.profileEmail.text = it.child("email").value.toString()
             //binding.password.text = it.child("password").value.toString()

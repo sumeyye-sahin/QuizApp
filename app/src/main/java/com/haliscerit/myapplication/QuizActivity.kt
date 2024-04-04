@@ -1,7 +1,6 @@
 package com.haliscerit.myapplication
 
 import android.app.AlertDialog
-import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -13,12 +12,10 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.haliscerit.myapplication.databinding.ActivityQuizBinding
 import com.haliscerit.myapplication.model.Question
-import kotlinx.coroutines.tasks.await
 
 class QuizActivity : AppCompatActivity() {
     private lateinit var binding: ActivityQuizBinding
@@ -55,7 +52,7 @@ class QuizActivity : AppCompatActivity() {
                    binding.option3.text= questionList.get(currentQuestion).option3
                    binding.option4.text= questionList.get(currentQuestion).option4
                    binding.sorusirasi.text = "Question - ${currentQuestion +1}"
-                   binding.expText.text=questionList.get(currentQuestion).exp
+                   binding.expText.text=questionList.get(currentQuestion).exp.toString().replace("/n", "\n")
                }
             }.addOnSuccessListener {
                 binding.progressBar2.visibility= android.view.View.GONE
@@ -172,7 +169,7 @@ class QuizActivity : AppCompatActivity() {
         binding.option2.text = questionList[currentQuestion].option2
         binding.option3.text = questionList[currentQuestion].option3
         binding.option4.text = questionList[currentQuestion].option4
-        binding.expText.text= questionList[currentQuestion].exp
+        binding.expText.text= questionList[currentQuestion].exp.toString().replace("/n", "\n")
         binding.sorusirasi.text = "Question - ${currentQuestion + 1}"
 
 
