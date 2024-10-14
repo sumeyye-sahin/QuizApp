@@ -6,12 +6,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".QuizActivity"
-    android:background="#0E1130">
+    tools:context=".view.QuizActivity"
+    >
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="550dp"
+        android:layout_height="667dp"
         android:background="#FFCCCCCC">
 
         <LinearLayout
@@ -179,40 +179,43 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="52dp"
+        android:layout_gravity="bottom"
+        android:paddingTop="5dp"
+        android:orientation="horizontal"
+        android:background="#0E1130">
 
         <Button
             android:id="@+id/back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:layout_gravity="start"
+            android:layout_marginTop="5dp"
             android:backgroundTint="#FFFFFF"
             android:text="Back"
-            android:textStyle="bold"
-            android:textSize="16sp"
             android:textColor="#0E1130"
             android:textColorLink="#FFFFFF"
-            android:visibility="gone"/>
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
 
         <Space
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
         <Button
             android:id="@+id/next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:layout_gravity="end"
+            android:layout_marginTop="5dp"
             android:backgroundTint="#FFFFFF"
             android:text="Accept And Next"
-            android:textStyle="bold"
-            android:textSize="16sp"
             android:textColor="#0E1130"
             android:textColorLink="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold"
             android:visibility="gone" />
 
     </LinearLayout>

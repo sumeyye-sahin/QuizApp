@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.haliscerit.myapplication"
     xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/complex_network"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/complex_network"
         android:supportsRtl="true"
         android:theme="@style/Theme.QuizApp"
         tools:targetApi="31">
         <activity
-            android:name=".Splashscreen"
+            android:name=".view.Splashscreen"
             android:exported="true"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,27 +25,32 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Signupscreen"
+            android:name=".view.SignUpScreen"
             android:exported="false"
-            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".view.MainActivity"
             />
         <activity
-            android:name=".QuizActivity"
+            android:name=".view.QuizActivity"
             android:exported="false"
-            android:parentActivityName=".HomeActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".view.HomeActivity"
             />
         <activity
-            android:name=".ProfileActivity"
+            android:name=".view.ProfileActivity"
             android:exported="false"
-            android:parentActivityName=".HomeActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".view.HomeActivity"
             />
         <activity
-            android:name=".HomeActivity"
+            android:name=".view.HomeActivity"
             android:exported="true"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"/>
         <activity
-            android:name=".MainActivity"
+            android:name=".view.MainActivity"
             android:exported="true"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
 
         </activity>

@@ -1,4 +1,4 @@
-package com.haliscerit.myapplication
+package com.haliscerit.myapplication.view
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
